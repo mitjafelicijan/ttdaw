@@ -1,3 +1,11 @@
+// Added to ignore compiler warning when it comes to 3rd party.
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic ignored "-Wundef"
+#pragma GCC diagnostic ignored "-Wunused"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wsign-compare"
+
 /*
   Simple DirectMedia Layer
   Copyright (C) 1997-2014 Sam Lantinga <slouken@libsdl.org>
