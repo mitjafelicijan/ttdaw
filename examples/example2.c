@@ -1,7 +1,7 @@
-#include "minisdl_audio.h"
+#include "../minisdl_audio.h"
 
 #define TSF_IMPLEMENTATION
-#include "tsf.h"
+#include "../tsf.h"
 
 // Holds the global instance pointer
 static tsf* g_TinySoundFont;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Load the SoundFont from a file
-	g_TinySoundFont = tsf_load_filename("sf2/florestan-subset.sf2");
+	g_TinySoundFont = tsf_load_filename("../sf2/florestan-subset.sf2");
 	if (!g_TinySoundFont) {
 		fprintf(stderr, "Could not load SoundFont\n");
 		return 1;

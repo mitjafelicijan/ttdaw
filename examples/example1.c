@@ -1,7 +1,7 @@
 #define TSF_IMPLEMENTATION
-#include "tsf.h"
+#include "../tsf.h"
 
-#include "minisdl_audio.h"
+#include "../minisdl_audio.h"
 
 //This is a minimal SoundFont with a single loopin saw-wave sample/instrument/preset (484 bytes)
 const static unsigned char MinimalSoundFont[] = {
