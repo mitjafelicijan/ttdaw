@@ -20,12 +20,12 @@ int main() {
 	}
 
 	/* // Open a MIDI input device */
-	/* stream = Pm_OpenInput(&err, NULL, NULL, NUM_INPUTS, NULL, 0); */
-	/* if (err != pmNoError) { */
-	/*     fprintf(stderr, "Error opening MIDI input device: %s\n", Pm_GetErrorText(err)); */
-	/*     Pm_Terminate(); */
-	/*     exit(1); */
-	/* } */
+	stream = (PortMidiStream *)Pm_OpenInput(&err, NULL, NULL, NUM_INPUTS, NULL, 0);
+	if (err != pmNoError) {
+	    fprintf(stderr, "Error opening MIDI input device: %s\n", Pm_GetErrorText(err));
+	    Pm_Terminate();
+	    exit(1);
+	}
 
 	/* // Read MIDI messages from the input device */
 	/* while (1) { */
@@ -43,7 +43,7 @@ int main() {
 	/* } */
 
 	/* // Close the MIDI input device */
-	/* Pm_Close(stream); */
+	Pm_Close(stream);
 
 	// Terminate PortMIDI
 	Pm_Terminate();
