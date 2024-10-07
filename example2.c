@@ -9,8 +9,7 @@ static tsf* g_TinySoundFont;
 // A Mutex so we don't call note_on/note_off while rendering audio samples
 static SDL_mutex* g_Mutex;
 
-static void AudioCallback(void* data, Uint8 *stream, int len)
-{
+static void AudioCallback(void* data, Uint8 *stream, int len) {
 	// Render the audio samples in float format
 	int SampleCount = (len / (2 * sizeof(float))); //2 output channels
 	SDL_LockMutex(g_Mutex); //get exclusive lock
@@ -18,8 +17,7 @@ static void AudioCallback(void* data, Uint8 *stream, int len)
 	SDL_UnlockMutex(g_Mutex);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	int i, Notes[7] = { 48, 50, 52, 53, 55, 57, 59 };
 
 	// Define the desired audio output format we request
@@ -31,16 +29,14 @@ int main(int argc, char *argv[])
 	OutputAudioSpec.callback = AudioCallback;
 
 	// Initialize the audio system
-	if (SDL_AudioInit(TSF_NULL) < 0)
-	{
+	if (SDL_AudioInit(TSF_NULL) < 0) {
 		fprintf(stderr, "Could not initialize audio hardware or driver\n");
 		return 1;
 	}
 
 	// Load the SoundFont from a file
-	g_TinySoundFont = tsf_load_filename("florestan-subset.sf2");
-	if (!g_TinySoundFont)
-	{
+	g_TinySoundFont = tsf_load_filename("sf2/florestan-subset.sf2");
+	if (!g_TinySoundFont) {
 		fprintf(stderr, "Could not load SoundFont\n");
 		return 1;
 	}
@@ -52,8 +48,7 @@ int main(int argc, char *argv[])
 	g_Mutex = SDL_CreateMutex();
 
 	// Request the desired audio output format
-	if (SDL_OpenAudio(&OutputAudioSpec, TSF_NULL) < 0)
-	{
+	if (SDL_OpenAudio(&OutputAudioSpec, TSF_NULL) < 0) {
 		fprintf(stderr, "Could not open the audio hardware or the desired audio output format\n");
 		return 1;
 	}
@@ -63,8 +58,7 @@ int main(int argc, char *argv[])
 	SDL_PauseAudio(0);
 
 	// Loop through all the presets in the loaded SoundFont
-	for (i = 0; i < tsf_get_presetcount(g_TinySoundFont); i++)
-	{
+	for (i = 0; i < tsf_get_presetcount(g_TinySoundFont); i++) {
 		//Get exclusive mutex lock, end the previous note and play a new note
 		printf("Play note %d with preset #%d '%s'\n", Notes[i % 7], i, tsf_get_presetname(g_TinySoundFont, i));
 		SDL_LockMutex(g_Mutex);
@@ -79,3 +73,4 @@ int main(int argc, char *argv[])
 	// because the process ends here.
 	return 0;
 }
+
