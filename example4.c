@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <alloca.h>
 #include <signal.h>
 #include <alsa/asoundlib.h>
 
@@ -72,7 +73,7 @@ int main(void) {
 
 	// Reading MIDI device.
 	struct pollfd *pfds;
-	int npfds;
+	size_t npfds;
 
 	npfds = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
 	pfds = alloca(sizeof(*pfds) * npfds);
