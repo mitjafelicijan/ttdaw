@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Load the SoundFont from a file
-	g_TinySoundFont = tsf_load_filename("../sf2/florestan-subset.sf2");
+	g_TinySoundFont = tsf_load_filename("../soundfonts/florestan-subset.sf2");
 	if (!g_TinySoundFont) {
 		fprintf(stderr, "Could not load SoundFont\n");
 		return 1;
