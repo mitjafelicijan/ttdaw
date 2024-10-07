@@ -1,3 +1,7 @@
+CC      := cc
+CFLAGS  := -Wall -Wextra -Wshadow -Wunused -Wswitch-enum -Wpedantic -Wundef
+LDFLAGS := -lm -ldl -lpthread -lasound
+
 ttdaw: main.c
-	$(CC) -Wall -o ttdaw main.c minisdl_audio.c -lm -ldl -lpthread -lasound -lm
+	$(CC) $(CFLAGS) -o ttdaw main.c minisdl_audio.c $(LDFLAGS)
 
