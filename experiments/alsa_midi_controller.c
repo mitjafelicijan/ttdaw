@@ -9,7 +9,6 @@
 
 static snd_seq_t *seq_handle;
 static snd_seq_addr_t *ports;
-static int rate = 44100;
 static int stop = 0;
 
 static void sighandler(int sig ATTRIBUTE_UNUSED) {
@@ -18,8 +17,6 @@ static void sighandler(int sig ATTRIBUTE_UNUSED) {
 
 int main(void) {
 	fprintf(stdout, "Example: Reading MIDI input\n");
-
-	snd_seq_t *seq_handle;
 
 	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
 		fprintf(stderr, "Error opening ALSA sequencer.\n");
