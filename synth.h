@@ -7,6 +7,7 @@
 
 typedef struct {
 	char *soundfont_file;
+	int soundfont_preset;
 } SynthArgs;
 
 void *synth(void *arg);

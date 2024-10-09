@@ -7,7 +7,6 @@ typedef struct {
 	int note;
 	int state;
 	int velocity;
-	int preset;
 	int action;
 } SharedData;
 

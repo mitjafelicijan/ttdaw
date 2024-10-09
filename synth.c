@@ -65,10 +65,10 @@ void *synth(void *arg) {
 		SDL_LockMutex(g_Mutex);
 
 		if (shared_data.state == 0) {
-			tsf_note_off(g_TinySoundFont, shared_data.preset, shared_data.note);
+			tsf_note_off(g_TinySoundFont, args->soundfont_preset, shared_data.note);
 		} else {
 			float normalized_velocity = (float)shared_data.velocity / 127.0f;
-			tsf_note_on(g_TinySoundFont, shared_data.preset, shared_data.note, normalized_velocity);
+			tsf_note_on(g_TinySoundFont, args->soundfont_preset, shared_data.note, normalized_velocity);
 		}
 
 		SDL_UnlockMutex(g_Mutex);

@@ -4,6 +4,15 @@
 experimentation and learning more about audio, MIDI and terminal applications
 in general.
 
+## Compile and run
+
+```sh
+make
+./ttdaw -c 28:0 -s soundfonts/general-808.sf2 -p 1
+```
+
+List all available MIDI devices with `acconect -l`.
+
 ## Soundfonts
 
 - https://dev.nando.audio/pages/soundfonts.html

@@ -109,7 +109,6 @@ void *midi(void *arg) {
 					}
 
 					shared_data.action = 1;
-					shared_data.preset = 3;
 
 					pthread_cond_signal(&cond_synth);
 					pthread_mutex_unlock(&mutex);

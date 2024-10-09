@@ -13,19 +13,21 @@ void help(const char *argv0) {
 	printf("Usage: %s [options]\n"
 			"\nAvailable options:\n"
 			"  -l,--list                    list available devices\n"
-			"  -p,--port=client:port        device port\n"
+			"  -c,--client=client:port      device client and port\n"
 			"  -s,--soundfont=file.sf2      soundfont file\n"
+			"  -p,--preset=1                soundfont preset\n"
 			"  -h,--help                    this help\n"
 			"  -v,--version                 show version\n",
 			argv0);
 }
 
 int main(int argc, char *argv[]) {
-	const char short_options[] = "lp:s:hv";
+	const char short_options[] = "lc:s:p:hv";
 	const struct option long_options[] = {
 		{ "list", 0, NULL, 'l' },
-		{ "port", 1, NULL, 'p' },
+		{ "client", 1, NULL, 'c' },
 		{ "soundfont", 1, NULL, 's' },
+		{ "preset", 1, NULL, 'p' },
 		{ "help", 0, NULL, 'h' },
 		{ "version", 0, NULL, 'v' },
 		{ 0 },
@@ -33,6 +35,7 @@ int main(int argc, char *argv[]) {
 
 	char *port_name = NULL;
 	char *soundfont_file = NULL;
+	int soundfont_preset = -1;
 
 	int opt;
 	while ((opt = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
@@ -40,11 +43,14 @@ int main(int argc, char *argv[]) {
 			case 'l':
 				fprintf(stderr, "List feature is NOT implemented yet.\n");
 				return 0;
-			case 'p':
+			case 'c':
 				port_name = optarg;
 				break;
 			case 's':
 				soundfont_file = optarg;
+				break;
+			case 'p':
+				soundfont_preset = atoi(optarg);
 				break;
 			case 'h':
 				help(argv[0]);
@@ -62,21 +68,25 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	if (port_name == NULL || soundfont_file == NULL) {
+	if (port_name == NULL || soundfont_file == NULL || soundfont_preset < 0) {
 		fprintf(stdout, "Missing options. Check help.\n");
-		fprintf(stdout, "Port and soundfile are required fields.\n");
+		fprintf(stdout, "Port, soundfile and preset are required fields.\n");
 		return 1;
 	}
 
 	fprintf(stdout, "> Device port:   %s\n", port_name);
 	fprintf(stdout, "> Soundfont:     %s\n", soundfont_file);
+	fprintf(stdout, "> SF preset:     %d\n", soundfont_preset);
 
 	// Create mutex.
 	initialize_mutex();	
 
 	// Create synth thread.
 	pthread_t synth_thread;
-	SynthArgs synth_args = { soundfont_file };
+	SynthArgs synth_args = {
+		.soundfont_file = soundfont_file,
+		.soundfont_preset = soundfont_preset,
+	};
 
 	if (pthread_create(&synth_thread, NULL, synth, (void*)&synth_args) != 0) {
 		fprintf(stderr, "Error creating synth thread\n");
