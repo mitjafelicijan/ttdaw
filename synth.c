@@ -2,6 +2,7 @@
 #include <unistd.h>
 
 #include "synth.h"
+#include "mutex.h"
 #include "minisdl_audio.h"
 
 #define TSF_IMPLEMENTATION
@@ -12,7 +13,7 @@ static SDL_mutex* g_Mutex;
 
 // Render the audio samples in float format.
 static void AudioCallback(void* data, Uint8 *stream, int len) {
-	int SampleCount = (len / (2 * sizeof(float))); // 2 output channels.
+	int SampleCount = (len / (AUDIO_CHANNELS * sizeof(float))); // 2 output channels.
 	SDL_LockMutex(g_Mutex); // Get exclusive lock.
 	tsf_render_float(g_TinySoundFont, (float*)stream, SampleCount, 0);
 	SDL_UnlockMutex(g_Mutex);
@@ -22,10 +23,10 @@ void *synth(void *arg) {
 	SynthArgs* args = (SynthArgs*)arg;
 
 	SDL_AudioSpec OutputAudioSpec;
-	OutputAudioSpec.freq = 44100;
+	OutputAudioSpec.freq = AUDIO_FREQ;
 	OutputAudioSpec.format = AUDIO_F32;
-	OutputAudioSpec.channels = 2;
-	OutputAudioSpec.samples = 4096;
+	OutputAudioSpec.channels = AUDIO_CHANNELS;
+	OutputAudioSpec.samples = AUDIO_SAMPLES;
 	OutputAudioSpec.callback = AudioCallback;
 
 	// Initialize the audio system.
@@ -56,12 +57,28 @@ void *synth(void *arg) {
 	SDL_PauseAudio(0);
 
 	while (1) {
-		sleep(1);
+		pthread_mutex_lock(&mutex);
+		while (shared_data.action == 0) {
+			pthread_cond_wait(&cond_synth, &mutex);
+		}
 
 		SDL_LockMutex(g_Mutex);
-		tsf_note_off(g_TinySoundFont, 1, 50);
-		tsf_note_on(g_TinySoundFont, 1, 50, 1.0f);
+
+		if (shared_data.state == 0) {
+			tsf_note_off(g_TinySoundFont, shared_data.preset, shared_data.note);
+		} else {
+			float normalized_velocity = (float)shared_data.velocity / 127.0f;
+			tsf_note_on(g_TinySoundFont, shared_data.preset, shared_data.note, normalized_velocity);
+		}
+
 		SDL_UnlockMutex(g_Mutex);
+
+		printf("Consumed: note=%d, state=%d velocity:%d\n", shared_data.note, shared_data.state, shared_data.velocity);
+
+		// Reset state to indicate data has been consumed.
+		shared_data.action = 0; 
+
+		pthread_mutex_unlock(&mutex);
 	}
 }
 

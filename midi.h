@@ -1,7 +1,7 @@
-#include <alsa/asoundlib.h>
-
 #ifndef MIDI_H_
 #define MIDI_H_
+
+#include <alsa/asoundlib.h>
 
 #define CLIENT_NAME "ttdaw"
 #define MAX_MIDI_PORTS 1

@@ -7,6 +7,7 @@
 #include "version.h"
 #include "midi.h"
 #include "synth.h"
+#include "mutex.h"
 
 void help(const char *argv0) {
 	printf("Usage: %s [options]\n"
@@ -70,6 +71,9 @@ int main(int argc, char *argv[]) {
 	fprintf(stdout, "> Device port:   %s\n", port_name);
 	fprintf(stdout, "> Soundfont:     %s\n", soundfont_file);
 
+	// Create mutex.
+	initialize_mutex();	
+
 	// Create synth thread.
 	pthread_t synth_thread;
 	SynthArgs synth_args = { soundfont_file };
@@ -90,6 +94,9 @@ int main(int argc, char *argv[]) {
 
 	pthread_join(midi_thread, NULL);
 	pthread_join(synth_thread, NULL);
+
+	// Destroy mutex.
+	destroy_mutex();
 
 	fprintf(stdout, "Exiting...\n");
 	return 0;
