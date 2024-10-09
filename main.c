@@ -21,7 +21,7 @@ void help(const char *argv0) {
 }
 
 int main(int argc, char *argv[]) {
-	const char short_options[] = "lp:s:hv:";
+	const char short_options[] = "lp:s:hv";
 	const struct option long_options[] = {
 		{ "list", 0, NULL, 'l' },
 		{ "port", 1, NULL, 'p' },
@@ -63,8 +63,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (port_name == NULL || soundfont_file == NULL) {
-		fprintf(stdout, "Missing options. Check help.\n\n");
-		fprintf(stdout, "Port and soundfile are required fields.\n\n");
+		fprintf(stdout, "Missing options. Check help.\n");
+		fprintf(stdout, "Port and soundfile are required fields.\n");
 		return 1;
 	}
 

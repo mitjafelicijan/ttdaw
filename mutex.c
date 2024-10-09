@@ -4,7 +4,6 @@
 SharedData shared_data;
 
 pthread_mutex_t mutex;
-pthread_cond_t cond_midi;
 pthread_cond_t cond_synth;
 
 void initialize_mutex() {
