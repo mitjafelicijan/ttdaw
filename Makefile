@@ -1,7 +1,7 @@
 CC      := cc
-CFLAGS  := -Wall -Wextra -Wshadow -Wunused -Wswitch-enum -Wpedantic -Wundef
+CFLAGS  := -Wall -Wextra -Wshadow -Wunused -Wswitch-enum -Wpedantic -ggdb
 LDFLAGS := -lm -ldl -lpthread -lasound
-FILES   := main.c midi.c minisdl_audio.c
+FILES   := main.c midi.c synth.c minisdl_audio.c
 PROG    := ttdaw
 
 $(PROG): main.c

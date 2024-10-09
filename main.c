@@ -6,6 +6,7 @@
 
 #include "version.h"
 #include "midi.h"
+#include "synth.h"
 
 void help(const char *argv0) {
 	printf("Usage: %s [options]\n"
@@ -69,7 +70,16 @@ int main(int argc, char *argv[]) {
 	fprintf(stdout, "> Device port:   %s\n", port_name);
 	fprintf(stdout, "> Soundfont:     %s\n", soundfont_file);
 
-	// Create and start MIDI thread.
+	// Create synth thread.
+	pthread_t synth_thread;
+	SynthArgs synth_args = { soundfont_file };
+
+	if (pthread_create(&synth_thread, NULL, synth, (void*)&synth_args) != 0) {
+		fprintf(stderr, "Error creating synth thread\n");
+		return 1;
+	}
+
+	// Create MIDI thread.
 	pthread_t midi_thread;
 	MidiArgs midi_args = { port_name };
 
@@ -79,6 +89,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	pthread_join(midi_thread, NULL);
+	pthread_join(synth_thread, NULL);
 
 	fprintf(stdout, "Exiting...\n");
 	return 0;
