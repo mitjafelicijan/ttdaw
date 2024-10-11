@@ -1,5 +1,5 @@
-#ifndef MUTEX_H
-#define MUTEX_H
+#ifndef MUTEX_H_
+#define MUTEX_H_
 
 #include <pthread.h>
 
@@ -19,5 +19,5 @@ extern pthread_cond_t cond_synth;
 void initialize_mutex();
 void destroy_mutex();
 
-#endif // MUTEX_H
+#endif // MUTEX_H_
 

@@ -7,6 +7,7 @@
 #include "version.h"
 #include "midi.h"
 #include "synth.h"
+#include "interface.h"
 #include "mutex.h"
 
 void help(const char *argv0) {
@@ -27,7 +28,7 @@ int main(int argc, char *argv[]) {
 		{ "list", 0, NULL, 'l' },
 		{ "client", 1, NULL, 'c' },
 		{ "soundfont", 1, NULL, 's' },
-		{ "preset", 1, NULL, 'p' },
+		{ "preset", 0, NULL, 'p' },
 		{ "help", 0, NULL, 'h' },
 		{ "version", 0, NULL, 'v' },
 		{ 0 },
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
 
 	char *port_name = NULL;
 	char *soundfont_file = NULL;
-	int soundfont_preset = -1;
+	int soundfont_preset = 0;
 
 	int opt;
 	while ((opt = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
@@ -56,11 +57,11 @@ int main(int argc, char *argv[]) {
 				help(argv[0]);
 				return 0;
 			case 'v':
-				fprintf(stdout, "ttdaw version %s\n", TTDAW_VERSION);
-				fprintf(stdout, "Website: %s.\n", TTDAW_WEBSITE);
-				fprintf(stdout, "%s\n", TTDAW_LICENSE);
-				fprintf(stdout, "%s\n", TTDAW_WARRANTY);
-				fprintf(stdout, "\n%s\n", TTDAW_AUTHOR);
+				fprintf(stdout, "ttdaw version %s\n", VERSION);
+				fprintf(stdout, "Website: %s.\n", WEBSITE);
+				fprintf(stdout, "%s\n", LICENSE);
+				fprintf(stdout, "%s\n", WARRANTY);
+				fprintf(stdout, "\n%s\n", AUTHOR);
 				return 0;
 			default:
 				fprintf(stdout, "Missing options. Check help.\n");
@@ -102,8 +103,22 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
+	// Create UI thread.
+	pthread_t interface_thread;
+	InterfaceArgs interface_args = {
+		.soundfont_file = soundfont_file,
+		.soundfont_preset = soundfont_preset,
+	};
+
+	if (pthread_create(&interface_thread, NULL, interface, (void*)&interface_args) != 0) {
+		fprintf(stderr, "Error creating interface thread\n");
+		return 1;
+	}
+
+	// Start threads.
 	pthread_join(midi_thread, NULL);
 	pthread_join(synth_thread, NULL);
+	pthread_join(interface_thread, NULL);
 
 	// Destroy mutex.
 	destroy_mutex();

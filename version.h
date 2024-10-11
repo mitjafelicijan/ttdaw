@@ -1,11 +1,11 @@
-#ifndef TTDAW_VERSION_H
-#define TTDAW_VERSION_H
+#ifndef VERSION_H_
+#define VERSION_H_
 
-#define TTDAW_VERSION  "0.1"
-#define TTDAW_WEBSITE  "https://github.com/mitjafelicijan/ttdaw"
-#define TTDAW_LICENSE  "This is free software: you are free to change and redistribute it."
-#define TTDAW_WARRANTY "There is NO WARRANTY, to the extent permitted by law."
-#define TTDAW_AUTHOR   "Written by Mitja Felicijan <https://mitjafelicijan.com>."
+#define VERSION  "0.1"
+#define WEBSITE  "https://github.com/mitjafelicijan/ttdaw"
+#define LICENSE  "This is free software: you are free to change and redistribute it."
+#define WARRANTY "There is NO WARRANTY, to the extent permitted by law."
+#define AUTHOR   "Written by Mitja Felicijan <https://mitjafelicijan.com>."
 
-#endif
+#endif // VERSION_H_
 

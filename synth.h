@@ -2,7 +2,7 @@
 #define SYNTH_H_
 
 #define AUDIO_FREQ 44100
-#define AUDIO_SAMPLES 64
+#define AUDIO_SAMPLES 128
 #define AUDIO_CHANNELS 2
 
 typedef struct {
@@ -12,5 +12,5 @@ typedef struct {
 
 void *synth(void *arg);
 
-#endif //  SYNTH_H_
+#endif // SYNTH_H_
 
