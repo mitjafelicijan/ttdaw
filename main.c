@@ -13,6 +13,7 @@
 void help(const char *argv0) {
 	printf("Usage: %s [options]\n"
 			"\nAvailable options:\n"
+			"  -n,--new                     creates a new song file\n"
 			"  -l,--list                    list available devices\n"
 			"  -c,--client=client:port      device client and port\n"
 			"  -s,--soundfont=file.sf2      soundfont file\n"
@@ -23,8 +24,9 @@ void help(const char *argv0) {
 }
 
 int main(int argc, char *argv[]) {
-	const char short_options[] = "lc:s:p:hv";
+	const char short_options[] = "n:lc:s:p:hv";
 	const struct option long_options[] = {
+		{ "new", 1, NULL, 'n' },
 		{ "list", 0, NULL, 'l' },
 		{ "client", 1, NULL, 'c' },
 		{ "soundfont", 1, NULL, 's' },
@@ -34,6 +36,7 @@ int main(int argc, char *argv[]) {
 		{ 0 },
 	};
 
+	char *new_song_name = NULL;
 	char *port_name = NULL;
 	char *soundfont_file = NULL;
 	int soundfont_preset = 0;
@@ -41,6 +44,8 @@ int main(int argc, char *argv[]) {
 	int opt;
 	while ((opt = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
 		switch (opt) {
+			case 'n':
+				new_song_name = optarg;
 			case 'l':
 				fprintf(stderr, "List feature is NOT implemented yet.\n");
 				return 0;
@@ -69,18 +74,36 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	if (new_song_name != NULL) {
+		fprintf(stdout, "Creating new song file with name %s\n", new_song_name);
+		return 0;
+	}
+
 	if (port_name == NULL || soundfont_file == NULL || soundfont_preset < 0) {
 		fprintf(stdout, "Missing options. Check help.\n");
 		fprintf(stdout, "Port, soundfile and preset are required fields.\n");
 		return 1;
 	}
 
-	fprintf(stdout, "> Device port:   %s\n", port_name);
-	fprintf(stdout, "> Soundfont:     %s\n", soundfont_file);
-	fprintf(stdout, "> SF preset:     %d\n", soundfont_preset);
+	/* fprintf(stdout, "> Device port:   %s\n", port_name); */
+	/* fprintf(stdout, "> Soundfont:     %s\n", soundfont_file); */
+	/* fprintf(stdout, "> SF preset:     %d\n", soundfont_preset); */
+	/* fprintf(stdout, "> Song name:     %s\n", new_song_name); */
 
 	// Create mutex.
 	initialize_mutex();	
+
+	// Create UI thread.
+	pthread_t interface_thread;
+	InterfaceArgs interface_args = {
+		.soundfont_file = soundfont_file,
+		.soundfont_preset = soundfont_preset,
+	};
+
+	if (pthread_create(&interface_thread, NULL, interface, (void*)&interface_args) != 0) {
+		fprintf(stderr, "Error creating interface thread\n");
+		return 1;
+	}
 
 	// Create synth thread.
 	pthread_t synth_thread;
@@ -103,22 +126,10 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	// Create UI thread.
-	pthread_t interface_thread;
-	InterfaceArgs interface_args = {
-		.soundfont_file = soundfont_file,
-		.soundfont_preset = soundfont_preset,
-	};
-
-	if (pthread_create(&interface_thread, NULL, interface, (void*)&interface_args) != 0) {
-		fprintf(stderr, "Error creating interface thread\n");
-		return 1;
-	}
-
 	// Start threads.
+	pthread_join(interface_thread, NULL);
 	pthread_join(midi_thread, NULL);
 	pthread_join(synth_thread, NULL);
-	pthread_join(interface_thread, NULL);
 
 	// Destroy mutex.
 	destroy_mutex();

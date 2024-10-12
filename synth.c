@@ -4,6 +4,7 @@
 #include "synth.h"
 #include "mutex.h"
 #include "minisdl_audio.h"
+#include "termbox2.h"
 
 #define TSF_IMPLEMENTATION
 #include "tsf.h"
@@ -73,7 +74,7 @@ void *synth(void *arg) {
 
 		SDL_UnlockMutex(g_Mutex);
 
-		printf("Consumed: note=%d, state=%d velocity:%d\n", shared_data.note, shared_data.state, shared_data.velocity);
+		/* printf("Consumed: note=%d, state=%d velocity:%d\n", shared_data.note, shared_data.state, shared_data.velocity); */
 
 		// Reset state to indicate data has been consumed.
 		shared_data.action = 0; 

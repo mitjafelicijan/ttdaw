@@ -6,6 +6,7 @@
 
 #include "midi.h"
 #include "mutex.h"
+#include "termbox2.h"
 
 static snd_seq_t *seq_handle;
 static snd_seq_addr_t *ports;
@@ -40,10 +41,10 @@ void *midi(void *arg) {
 	}
 
 	// Listing assigned ports.
-	fprintf(stdout, "Ports:\n");
-	for (int j = 0; j < MAX_MIDI_PORTS; j++) {
-		fprintf(stdout, " client: %d, port: %d\n", ports[j].client, ports[j].port);
-	}
+	/* fprintf(stdout, "Ports:\n"); */
+	/* for (int j = 0; j < MAX_MIDI_PORTS; j++) { */
+	/* 	fprintf(stdout, " client: %d, port: %d\n", ports[j].client, ports[j].port); */
+	/* } */
 
 	// Connecting ports.
 	for (int i = 0; i < MAX_MIDI_PORTS; ++i) {
@@ -87,21 +88,24 @@ void *midi(void *arg) {
 						shared_data.note = ev->data.note.note;
 						shared_data.state = 1;
 						shared_data.velocity = ev->data.note.velocity;
-						printf("%3d:%-3dNote on  %2d, note %d, velocity: %3d\n",
-								ev->source.client, ev->source.port,
-								ev->data.note.channel,
-								ev->data.note.note,
-								ev->data.note.velocity);
+						tb_printf(0, 3, TB_CYAN, 0, "Note: %3d", ev->data.note.note);
+						tb_printf(0, 4, TB_CYAN, 0, "Velocity: %3d", ev->data.note.velocity);
+						tb_present();
+						/* printf("%3d:%-3dNote on  %2d, note %d, velocity: %3d\n", */
+						/* 		ev->source.client, ev->source.port, */
+						/* 		ev->data.note.channel, */
+						/* 		ev->data.note.note, */
+						/* 		ev->data.note.velocity); */
 						break;
 
 					case SND_SEQ_EVENT_NOTEOFF:
 						shared_data.note = ev->data.note.note;
 						shared_data.state = 0;
 						shared_data.velocity = 0;
-						printf("%3d:%-3dNote off\t%2d, note %d\n",
-								ev->source.client, ev->source.port,
-								ev->data.note.channel,
-								ev->data.note.note);
+						/* printf("%3d:%-3dNote off\t%2d, note %d\n", */
+						/* 		ev->source.client, ev->source.port, */
+						/* 		ev->data.note.channel, */
+						/* 		ev->data.note.note); */
 						break;
 
 
