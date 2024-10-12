@@ -56,7 +56,7 @@ void *interface(void *arg) {
 	if (ret) {
 		fprintf(stderr, "tb_init() failed with error code %d\n", ret);
 		exit(1);
-	}
+	
 
 	tb_set_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
 	struct tb_event ev;
@@ -64,9 +64,12 @@ void *interface(void *arg) {
 	tb_clear();
 	tb_present();
 
+	tb_set_cursor(0, tb_height()-1);
+	tb_hide_cursor();
+
 	// Show currently selected soundfont.
 	tb_printf(0, 0, TB_GREEN, 0, "Soundfont: %s", args->soundfont_file);
-	tb_printf(0, 1, TB_GREEN, 0, "Preset: %s", args->soundfont_preset);
+	tb_printf(0, 1, TB_GREEN, 0, "Preset: %d", args->soundfont_preset);
 	tb_present();
 
 	// Draw interface.

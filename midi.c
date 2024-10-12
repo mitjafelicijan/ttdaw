@@ -60,7 +60,6 @@ void *midi(void *arg) {
 		exit(1);
 	}
 
-
 	// Reading MIDI device.
 	struct pollfd *pfds;
 	size_t npfds;
@@ -88,8 +87,8 @@ void *midi(void *arg) {
 						shared_data.note = ev->data.note.note;
 						shared_data.state = 1;
 						shared_data.velocity = ev->data.note.velocity;
-						tb_printf(0, 3, TB_CYAN, 0, "Note: %3d", ev->data.note.note);
-						tb_printf(0, 4, TB_CYAN, 0, "Velocity: %3d", ev->data.note.velocity);
+						tb_printf(0, 3, TB_CYAN, 0, "Note: %-3d", ev->data.note.note);
+						tb_printf(0, 4, TB_CYAN, 0, "Velocity: %-3d", ev->data.note.velocity);
 						tb_present();
 						/* printf("%3d:%-3dNote on  %2d, note %d, velocity: %3d\n", */
 						/* 		ev->source.client, ev->source.port, */

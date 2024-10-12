@@ -85,10 +85,10 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	/* fprintf(stdout, "> Device port:   %s\n", port_name); */
-	/* fprintf(stdout, "> Soundfont:     %s\n", soundfont_file); */
-	/* fprintf(stdout, "> SF preset:     %d\n", soundfont_preset); */
-	/* fprintf(stdout, "> Song name:     %s\n", new_song_name); */
+	fprintf(stdout, "> Device port:   %s\n", port_name);
+	fprintf(stdout, "> Soundfont:     %s\n", soundfont_file);
+	fprintf(stdout, "> SF preset:     %d\n", soundfont_preset);
+	fprintf(stdout, "> Song name:     %s\n", new_song_name);
 
 	// Create mutex.
 	initialize_mutex();	
