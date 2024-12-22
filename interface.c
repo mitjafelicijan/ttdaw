@@ -56,7 +56,7 @@ void *interface(void *arg) {
 	if (ret) {
 		fprintf(stderr, "tb_init() failed with error code %d\n", ret);
 		exit(1);
-	
+	}
 
 	tb_set_input_mode(TB_INPUT_ESC | TB_INPUT_MOUSE);
 	struct tb_event ev;
